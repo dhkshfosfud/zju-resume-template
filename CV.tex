@@ -1,9 +1,8 @@
 \documentclass[11pt]{article}
 
-
 \setlength{\parindent}{0pt}
 \usepackage{xltxtra}
-\usepackage{hyperref}
+\usepackage[bookmarks=false]{hyperref}  % 直接禁用 PDF 书签
 \hypersetup{hidelinks}
 \usepackage{url}
 \urlstyle{tt}
@@ -73,14 +72,18 @@
 
 % =======================================================================
 
-
-\titleformat{\section}         % 定制 \section 命令 
-{\large\bfseries\raggedright} % 将 section 标题设置为大号、粗体且左对齐
-{}{0em}                      % 可用于为所有 section 添加前缀（如“章节...”）
-{}                           % 可用于在标题前插入代码
-[{\color{CVBlue}\titlerule}]  % 在标题后插入一条横线
+% 简化 section 格式
+\titleformat{\section}
+{\large\bfseries\raggedright}
+{}{0em}
+{}[{\color{CVBlue}\titlerule}]
 \titlespacing*{\section}{0cm}{*1.6}{*1.2}
 
+% 定义图标命令，避免 hyperref 警告
+\newcommand{\iconEducation}{{\color{CVBlue}\faGraduationCap}}
+\newcommand{\iconUsers}{{\color{CVBlue}\faUsers}}
+\newcommand{\iconCogs}{{\color{CVBlue}\faCogs}}
+\newcommand{\iconList}{{\color{CVBlue}\faList}}
 
 
 \begin{document}
