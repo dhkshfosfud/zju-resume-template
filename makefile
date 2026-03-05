@@ -1,30 +1,28 @@
-name: Build Resume
-
-on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+name: Build LaTeX CV
+on: [push, pull_request]
 
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Git repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
+        id: latex_compile
         with:
           root_file: CV.tex
-          latexmk_use_xelatex: true
-          # 由于你的字体在本地 fonts 文件夹中，且使用了 Path 参数，通常不需要额外安装字体
-          # 如果遇到字体问题，可以在这里配置
+          compiler: xelatex
+          args: -interaction=nonstopmode -file-line-error  # 显示具体错误行
 
-      - name: Upload PDF as artifact
+      # 关键：即使编译失败，也上传日志文件
+      - name: Upload log files (even if failed)
         uses: actions/upload-artifact@v4
+        if: always()  # 无论编译成功/失败都执行
         with:
-          name: CV-PDF
-          path: CV.pdf
-          if-no-files-found: error
+          name: latex-logs
+          path: |
+            CV.log
+            CV.aux
+            CV.fls
