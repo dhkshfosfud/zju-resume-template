@@ -14,13 +14,66 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
 
+      # 新增：调试步骤 - 检查文件结构
+      - name: Debug file structure
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Files in root ==="
+          ls -la
+          echo "=== Fonts directory ==="
+          ls -la fonts/ || echo "fonts directory not found"
+          echo "=== Main fonts ==="
+          ls -la fonts/Main/ || echo "Main fonts not found"
+          echo "=== Chinese fonts ==="
+          ls -la fonts/hansans/ || echo "hansans fonts not found"
+          echo "=== Image files ==="
+          ls -la *.png *.jpg 2>/dev/null || echo "No images found"
+
+      # 新增：清理辅助文件
+      - name: Clean auxiliary files
+        run: |
+          rm -f *.aux *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz
+          echo "Cleaned auxiliary files"
+
+      # 新增：验证字体文件
+      - name: Verify font files
+        run: |
+          echo "=== Verifying font files ==="
+          if [ -f "fonts/Main/texgyretermes-regular.otf" ]; then
+            echo "✓ Main font exists"
+            file fonts/Main/texgyretermes-regular.otf
+          else
+            echo "✗ Main font missing!"
+          fi
+          
+          if [ -f "fonts/Main/texgyretermes-bold.otf" ]; then
+            echo "✓ Main bold font exists"
+          else
+            echo "✗ Main bold font missing!"
+          fi
+          
+          if [ -f "fonts/hansans/NotoSansSC-Regular.otf" ]; then
+            echo "✓ Chinese font exists"
+            file fonts/hansans/NotoSansSC-Regular.otf
+          else
+            echo "✗ Chinese font missing!"
+          fi
+          
+          if [ -f "fonts/hansans/NotoSansSC-Bold.ttf" ]; then
+            echo "✓ Chinese bold font exists"
+          else
+            echo "✗ Chinese bold font missing!"
+          fi
+
+      # 修改：编译步骤 - 添加工作目录参数
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           root_file: CV.tex
           latexmk_use_xelatex: true
-          # 由于你的字体在本地 fonts 文件夹中，且使用了 Path 参数，通常不需要额外安装字体
-          # 如果遇到字体问题，可以在这里配置
+          work_in_root_file_dir: true  # 添加这一行
+          args: -pdf -file-line-error -interaction=nonstopmode -halt-on-error  # 添加详细参数
 
       - name: Upload PDF as artifact
         uses: actions/upload-artifact@v4
