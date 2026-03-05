@@ -1,24 +1,30 @@
-# 定义新的PDF文件名 (不带.pdf后缀)
-NEW_FILENAME_BASE = CV
+name: Build Resume
 
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
-# 原始的tex文件名
-TEX_SOURCE = CV.tex
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
 
-# 默认目标，当你只输入 'make' 时会执行这个
-all: $(NEW_FILENAME_BASE).pdf
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: CV.tex
+          latexmk_use_xelatex: true
+          # 由于你的字体在本地 fonts 文件夹中，且使用了 Path 参数，通常不需要额外安装字体
+          # 如果遇到字体问题，可以在这里配置
 
-# 编译生成新文件名的PDF
-$(NEW_FILENAME_BASE).pdf: $(TEX_SOURCE)
-	xelatex -jobname="$(NEW_FILENAME_BASE)" $(TEX_SOURCE)
-	xelatex -jobname="$(NEW_FILENAME_BASE)" $(TEX_SOURCE)
-	xelatex -jobname="$(NEW_FILENAME_BASE)" $(TEX_SOURCE)
-
-
-# 清理规则
-clean:
-	find . -name '*.aux' -print0 | xargs -0 rm -rf
-	rm -rf *.log *.lot *.out *.toc *.bbl *.blg *.thm *.nav *.xml *.snm *.bcf
-	# 同时清理新旧两种可能的PDF文件名，以及新jobname产生的辅助文件
-	rm -f CV-ch.pdf $(NEW_FILENAME_BASE).pdf
-	find . -name '$(NEW_FILENAME_BASE).aux' -print0 | xargs -0 rm -rf
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CV-PDF
+          path: CV.pdf
+          if-no-files-found: error
