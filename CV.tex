@@ -1,9 +1,8 @@
 \documentclass[11pt]{article}
 
-
 \setlength{\parindent}{0pt}
 \usepackage{xltxtra}
-\usepackage{hyperref}
+\usepackage[bookmarks=false]{hyperref}  % 直接禁用 PDF 书签
 \hypersetup{hidelinks}
 \usepackage{url}
 \urlstyle{tt}
@@ -16,8 +15,7 @@
 \usepackage{fontspec}
 \usepackage{xeCJK}
 \usepackage{enumitem}
-\CJKsetecglue{} %% 取消中文与数字之间的间隙
-
+\CJKsetecglue{} %% 
 
 %% 主文档字体设置
 \setmainfont[
@@ -50,37 +48,18 @@
     nohead
 ]{geometry}
 
-\usepackage{titlesec}
-\usepackage{enumitem}
-\setlist{noitemsep} % 取消列表项间的额外间距
-%\setlist{nosep} % 取消所有垂直间距
-\setlist[itemize]{topsep=0.25em, leftmargin=*}
-\setlist[enumerate]{topsep=0.25em, leftmargin=*}
-
-% --- 用于控制【不同项目之间】的垂直距离 ---
-\newlength{\interProjectSpacing}
-\setlength{\interProjectSpacing}{0.9em} % <--- 在此调整项目之间的距离
-\newcommand{\projectsep}{\vspace{\interProjectSpacing}}
-
-% --- 用于控制【项目标题】与下方【项目描述】的距离 ---
-\newlength{\intraProjectTitleSep}
-\setlength{\intraProjectTitleSep}{0.4em} % <--- 在此调整标题和描述的距离
-\newcommand{\titlebreak}{\\[\intraProjectTitleSep]}
-
-% --- 用于控制【项目描述】与下方【要点列表】的距离 ---
-\newlength{\intraProjectListTopSep}
-\setlength{\intraProjectListTopSep}{0.2em} % <--- 在此调整描述和列表的距离
-
-% =======================================================================
-
-
-\titleformat{\section}         % 定制 \section 命令 
-{\large\bfseries\raggedright} % 将 section 标题设置为大号、粗体且左对齐
-{}{0em}                      % 可用于为所有 section 添加前缀（如“章节...”）
-{}                           % 可用于在标题前插入代码
-[{\color{CVBlue}\titlerule}]  % 在标题后插入一条横线
+% 简化 section 格式
+\titleformat{\section}
+{\large\bfseries\raggedright}
+{}{0em}
+{}[{\color{CVBlue}\titlerule}]
 \titlespacing*{\section}{0cm}{*1.6}{*1.2}
 
+% 定义图标命令，避免 hyperref 警告
+\newcommand{\iconEducation}{{\color{CVBlue}\faGraduationCap}}
+\newcommand{\iconUsers}{{\color{CVBlue}\faUsers}}
+\newcommand{\iconCogs}{{\color{CVBlue}\faCogs}}
+\newcommand{\iconList}{{\color{CVBlue}\faList}}
 
 
 \begin{document}
